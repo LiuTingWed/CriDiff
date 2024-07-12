@@ -72,9 +72,9 @@ class Dataset(data.Dataset):
             self.img_paths = [p for ext in exts for p in Path(f'{img_paths}').glob(f'**/*.{ext}')]
             mask_paths = os.path.join(folder, "masks/train/")
             self.mask_paths = [p for ext in exts for p in Path(f'{mask_paths}').glob(f'**/*.{ext}')]
-            body_paths = os.path.join(folder, "body/train/")
+            body_paths = os.path.join(folder, "body/")
             self.body_paths = [p for ext in exts for p in Path(f'{body_paths}').glob(f'**/*.{ext}')]
-            detail_paths = os.path.join(folder, "detail/train/")
+            detail_paths = os.path.join(folder, "detail/")
             self.detail_paths = [p for ext in exts for p in Path(f'{detail_paths}').glob(f'**/*.{ext}')]
 
             self.transform = A.Compose([
