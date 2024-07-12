@@ -26,4 +26,14 @@ Please check this **.py** for more details.
 ## Download Pre-train Weight
 [Google Driver](https://drive.google.com/file/d/1snw4TYUCD5z4d3aaId1iBdw-yUKjRmPC/view)
 ## Training & Inference & Evaluation
+## Citation
+```
+@article{liu2024cridiff,
+  title={CriDiff: Criss-cross Injection Diffusion Framework via Generative Pre-train for Prostate Segmentation},
+  author={Liu, Tingwei and Zhang, Miao and Liu, Leiye and Zhong, Jialong and Wang, Shuyao and Piao, Yongri and Lu, Huchuan},
+  journal={arXiv preprint arXiv:2406.14186},
+  year={2024}
+}
+```
+## Any questions please contact with tingweiliu@mail.dlut.edu.cn
 
