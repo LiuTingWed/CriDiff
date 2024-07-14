@@ -41,6 +41,10 @@ python -m torch.distributed.launch --nproc_per_node=2 train.py
 ### Why can't the model perform training and validation simultaneously?
 The output of diffusion models is related to the randomly sampled noise: different noise leads to different outputs. I have not addressed the issue of fluctuating model performance between the training and validation stages, for detailed descriptions please refer to [this link](https://github.com/lucidrains/med-seg-diff-pytorch/issues/18). 
 Therefore, I would recommend saving all checkpoints, and then using two separate GPUs for validation to ensure that others can also achieve consistent performance. Well, I hope someone smarter than me tell me why :-).
+### Inference
+xxxxx
+### Evaluation
+xxxxxx
 ## Thanks 
 This repository refer to [med-seg-diff-pytorch](https://github.com/lucidrains/med-seg-diff-pytorch) and [denoising-diffusion-pytorch](https://github.com/lucidrains/denoising-diffusion-pytorch). Some very concise diffusion frameworks are helpful to me.
 ## Citation
