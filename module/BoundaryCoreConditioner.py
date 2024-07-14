@@ -576,6 +576,7 @@ class ConditionExtractor(nn.Module):
     def __init__(
         self,
         dim,
+        cp_condition_net,
         dim_mults=(1, 2, 4, 8),
         self_condition = True,
         with_time_emb = True,
@@ -665,7 +666,7 @@ class ConditionExtractor(nn.Module):
             ]))
 
         from module.pvt_v2 import PyramidVisionTransformerV2, pvt_v2_b2
-        backbone = pvt_v2_b2(True)
+        backbone = pvt_v2_b2(True, cp_condition_net)
         self.backbone = torch.nn.Sequential(*list(backbone.children()))[:-1]
         self.decoder_core = CoreEnhance((64, 128, 256, 512), (8, 16, 32, 64), out_c =64)
         self.decoder_boundary = BoundaryEnhance((64, 128, 256, 512), (8, 16, 32, 64), out_c =64)

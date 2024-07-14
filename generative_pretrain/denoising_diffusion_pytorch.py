@@ -580,7 +580,7 @@ class Trainer(object):
         ema_update_every = 10,
         ema_decay = 0.995,
         adam_betas = (0.9, 0.99),
-        save_and_sample_every = 5000,
+        save_and_sample_every = 100,
         num_samples = 25,
         results_folder = './results',
         amp = False,

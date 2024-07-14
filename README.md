@@ -26,6 +26,21 @@ Please check this **.py** for more details.
 ## Download Pre-train Weight
 [Google Driver (PVT_b2)](https://drive.google.com/file/d/1snw4TYUCD5z4d3aaId1iBdw-yUKjRmPC/view)
 ## Training & Inference & Evaluation
+### Generative pretrain
+This stage relies on [accelerate](https://github.com/huggingface/accelerate), please install it and set it up.
+\
+``
+python generative_pretrain/train_generator_accelerate.py --dataset_root xxx/DATASET_NAME/images/train
+`` 
+### Training
+Before trainning, please check **--dataset_root, --cp_condition_net, --cp_stage1, --checkpoint_save_dir** in train.py
+\
+``
+python -m torch.distributed.launch --nproc_per_node=2 train.py
+`` 
+### Why can't the model perform training and validation simultaneously?
+The output of diffusion models is related to the randomly sampled noise: different noise leads to different outputs. I have not addressed the issue of fluctuating model performance between the training and validation stages, for detailed descriptions please refer to [this link](https://github.com/lucidrains/med-seg-diff-pytorch/issues/18). 
+Therefore, I would recommend saving all checkpoints, and then using two separate GPUs for validation to ensure that others can also achieve consistent performance. Well, I hope someone smarter than me tell me why :-).
 ## Citation
 ```
 @article{liu2024cridiff,

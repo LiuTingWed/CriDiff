@@ -519,8 +519,8 @@ class DiffSOD(nn.Module):
         timesteps = args.num_timesteps
         beta_schedule = args.beta_sched
 
-        self.model = UnetAtt(dim=64, dim_mults=(1, 2, 4, 8), self_condition=args.self_condition, with_time_emb=True,
-                          residual=False)
+        self.model = UnetAtt(dim=64, dim_mults=(1, 2, 4, 8), cp_condition_net = args.cp_condition_net, self_condition=args.self_condition, with_time_emb=True,
+                             residual=False)
         # self.model = UnetV1(64, 256, 1, 1)
         self.input_img_channels = self.model.input_img_channels
         self.mask_channels = self.model.mask_channels

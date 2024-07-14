@@ -19,28 +19,32 @@ import os
 os.environ['CUDA_VISIBLE_DEVICES']='0,1'
 parser = argparse.ArgumentParser("Diffusion")
 ##training setting
-parser.add_argument('--dataset_name', type=str, default='PROMISE12', help='test_size')
-parser.add_argument('--dataset_root', type=str, default='/home/oip/data/ProstateSeg/PROMISE12', help='dataset_root')
-parser.add_argument('--checkpoint_dir', type=str, default='/media/oip/file/ltw2', help='other large space path to save ck')
+parser.add_argument('--dataset_name', type=str, default='NCI-ISBI')
+parser.add_argument('--dataset_root', type=str, default='/home/david/datasets/ProstateSeg/NCI-ISBI')
+parser.add_argument('--cp_condition_net', type=str, default='./pvt_v2_b2.pth', help='checkpoint for condition network (like PVT)')
+parser.add_argument('--cp_stage1', type=str, default='./generative_pretrain/results/model-8.pt', help='checkpoint from stage 1')
+parser.add_argument('--checkpoint_save_dir', type=str, default='/media/oip/file/ltw2', help='other large space path to save ck')
+parser.add_argument('--checkpoint_interval', type=int, default= 20, help='checkpoint_every XX epoch to save')
+
 parser.add_argument('--save', type=str, default='./exp', help='experiment name')
 
 parser.add_argument('--batch_size', type=int, default=6, help='batch size')
 parser.add_argument('--epochs', type=int, default=2000, help='num of training epochs')
-parser.add_argument('--size', type=int, default=256, help='batch size')
+parser.add_argument('--size', type=int, default=256)
 parser.add_argument('--learning_rate', type=float, default=0.00005, help='init learning rate')
 parser.add_argument('--momentum', type=float, default= 0.9, help='momentum')
 parser.add_argument('--weight_decay', type=float, default=3e-5, help='weight decay')
 parser.add_argument('--num_timesteps', type=int, default=500, help='batch size')
 
-parser.add_argument('--self_condition', type=bool, default=True, help='cosine or liner')
-parser.add_argument('--beta_sched', type=str, default='linear', help='cosine or liner')
+parser.add_argument('--self_condition', type=bool, default=True)
+parser.add_argument('--beta_sched', type=str, default='linear')
 parser.add_argument('--numSteps', type=int, default=1, help='Number of steps to breakup the batchSize into.')
-parser.add_argument('--sample_batch_size', type=int, default=5, help='batch size')
-parser.add_argument('--num_ens', type=int, default=1, help='batch size')
-parser.add_argument('--sampling_timesteps', type=int, default=30, help='batch size')
+parser.add_argument('--sample_batch_size', type=int, default=5)
+parser.add_argument('--num_ens', type=int, default=1)
+parser.add_argument('--sampling_timesteps', type=int, default=30)
 
 parser.add_argument('--report_freq', type=float, default=100, help='report frequency')
-parser.add_argument('--print_freq', type=int, default=50, help='note for this run')
+parser.add_argument('--print_freq', type=int, default=50)
 parser.add_argument('--job_name', type=str, default='PVT_GLenhanceV21_Diff_dim64_Prostate_init', help='job_name')
 
 args, unparsed = parser.parse_known_args()
@@ -102,7 +106,7 @@ def main():
     if args.job_name != '':
         args.job_name = time.strftime("%Y%m%d-%H%M%S_") + str(args.learning_rate) +'_'+ args.beta_sched +'_'+ args.job_name
         args.save = os.path.join(args.save, args.job_name)
-        args.checkpoint_dir = os.path.join(args.checkpoint_dir, args.job_name)
+        args.checkpoint_save_dir = os.path.join(args.checkpoint_save_dir, args.job_name)
         if local_rank == 0:
             utils.create_exp_dir(args.save,scripts_to_save=glob.glob('*.py'))
             os.system('cp -r ./module '+args.save)
@@ -129,37 +133,32 @@ def main():
     dev = dev
     from module.DiffusionModel import DiffSOD
     if dev != "cpu":
-    # Initialize the environment
-    #     save_dict = torch.load(
-    #         "./exp/20231220-220824_5e-05_linear_ResUnet_GLenhanceV21_detail_body_decouple_debody_crssAtt_Prostate/state_dict_epoch_210_step_26670_dice_0_22222808003425598.pt")[
-    #         'model_state_dict']
-    #     save_dict = torch.load(
-    #         "./generate_pharse/results/model-8.pt")[
-    #         'model']
-    #     filtered_state_dict = {k: v for k, v in save_dict.items() if 'model' in k}
-    #     fixed_state_dict = {k.replace('model.', ''): v for k, v in filtered_state_dict.items()}
-    #     fixed_state_dict2 = {}
-    #     # downs_label_noise.1.2.fn.fn.to_k.weight
-    #     key_ex = ["downs_label_noise.1.2.fn.fn.to_k.weight","downs_label_noise.1.2.fn.fn.to_v.weight","downs_label_noise.2.2.fn.fn.to_k.weight","downs_label_noise.2.2.fn.fn.to_v.weight","downs_label_noise.3.2.fn.fn.to_k.weight","downs_label_noise.3.2.fn.fn.to_v.weight","ups.1.2.fn.fn.to_v.weight","ups.1.2.fn.fn.to_k.weight","ups.0.2.fn.fn.to_v.weight","ups.0.2.fn.fn.to_k.weight"]
-    #     for name, param in fixed_state_dict.items():
-    #         a = name.split(".")[-2]
-    #         if name == "downs_label_noise.1.2.fn.fn.to_k.weight":
-    #             pass
-    #         if name == 'downs_label_noise.1.2.fn.fn.to_v.weight':
-    #             pass
-    #         if name == 'downs_label_noise.2.2.fn.fn.to_k.weight':
-    #             pass
-    #         if name == 'downs_label_noise.2.2.fn.fn.to_v.weight':
-    #             pass
-    #         if name == 'downs_label_noise.3.2.fn.fn.to_k.weight':
-    #             pass
-    #         if name == 'downs_label_noise.3.2.fn.fn.to_v.weight':
-    #             pa100ss
-    #         fixed_state_dict2[name] = param
-    #     fixed_state_dict2 = {k: v for k, v in fixed_state_dict.items() if k not in key_ex}
+    # Initialize the pretrain weight
+        save_dict = torch.load(args.cp_stage1)['model']
+        filtered_state_dict = {k: v for k, v in save_dict.items() if 'model' in k}
+        fixed_state_dict = {k.replace('model.', ''): v for k, v in filtered_state_dict.items()}
+        fixed_state_dict2 = {}
+        # downs_label_noise.1.2.fn.fn.to_k.weight
+        key_ex = ["downs_label_noise.1.2.fn.fn.to_k.weight","downs_label_noise.1.2.fn.fn.to_v.weight","downs_label_noise.2.2.fn.fn.to_k.weight","downs_label_noise.2.2.fn.fn.to_v.weight","downs_label_noise.3.2.fn.fn.to_k.weight","downs_label_noise.3.2.fn.fn.to_v.weight","ups.1.2.fn.fn.to_v.weight","ups.1.2.fn.fn.to_k.weight","ups.0.2.fn.fn.to_v.weight","ups.0.2.fn.fn.to_k.weight"]
+        for name, param in fixed_state_dict.items():
+            a = name.split(".")[-2]
+            if name == "downs_label_noise.1.2.fn.fn.to_k.weight":
+                pass
+            if name == 'downs_label_noise.1.2.fn.fn.to_v.weight':
+                pass
+            if name == 'downs_label_noise.2.2.fn.fn.to_k.weight':
+                pass
+            if name == 'downs_label_noise.2.2.fn.fn.to_v.weight':
+                pass
+            if name == 'downs_label_noise.3.2.fn.fn.to_k.weight':
+                pass
+            if name == 'downs_label_noise.3.2.fn.fn.to_v.weight':
+                pass
+            fixed_state_dict2[name] = param
+        fixed_state_dict2 = {k: v for k, v in fixed_state_dict.items() if k not in key_ex}
 
         DiffModel = DiffSOD(args, sampling_timesteps=args.sampling_timesteps if args.sampling_timesteps > 0 else None)
-        # DiffModel.model.load_state_dict(fixed_state_dict2, strict=False)
+        DiffModel.model.load_state_dict(fixed_state_dict2, strict=False)
         model = DDP(DiffModel.cuda(), device_ids=[local_rank], find_unused_parameters=False)
 
     else:
@@ -311,12 +310,12 @@ def main():
         #     is_eval = True
         # if epoch >= 500 and epoch < 700 and epoch % 10==0:
         #     is_eval = True
-        if epoch >= 500 and epoch % 20==0:
+        if epoch >= 500 and epoch % args.checkpoint_interval==0:
             is_eval = True
 
         # if epoch > 0 :
         if is_eval:
-            saveDir = args.checkpoint_dir
+            saveDir = args.checkpoint_save_dir
             if not os.path.isdir(saveDir):
                 os.makedirs(saveDir)
             torch.save({

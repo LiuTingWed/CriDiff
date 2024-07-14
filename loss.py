@@ -173,10 +173,10 @@ def adaptive_pixel_intensity_loss(pred, mask):
 
 def comput_loss(side_out, target, type):
     if isinstance(side_out,list):
-        sal_loss1 = structure_loss(side_out[0], type)
-        sal_loss2 = structure_loss(side_out[1], type)
-        sal_loss3 = structure_loss(side_out[2], type)
-        sal_loss4 = structure_loss(side_out[3], type)
+        sal_loss1 = structure_loss(side_out[0], target, type)
+        sal_loss2 = structure_loss(side_out[1], target, type)
+        sal_loss3 = structure_loss(side_out[2], target, type)
+        sal_loss4 = structure_loss(side_out[3], target, type)
         side_out_loss = sal_loss1 / 2 + sal_loss2 / 4 + sal_loss3 / 8 + sal_loss4 / 8
         # salloss = sal_loss1
         return side_out_loss

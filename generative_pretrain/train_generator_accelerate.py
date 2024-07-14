@@ -21,12 +21,12 @@ import os
 os.environ['CUDA_VISIBLE_DEVICES']='0,1'
 parser = argparse.ArgumentParser("Diffusion")
 parser.add_argument('--self_condition', type=bool, default=True)
-parser.add_argument('--batch_size', type=int, default=24, help='batch size')
+parser.add_argument('--batch_size', type=int, default=16, help='batch size')
 parser.add_argument('--train_num_steps', type=int, default=40000, help='num of training epochs')
-parser.add_argument('--num_timesteps', type=int, default=500, help='batch size')
-parser.add_argument('--size', type=int, default=256, help='batch size')
-parser.add_argument('--dataset_root', type=str, default='/home/oip/data/ProstateSeg/ProstateX/images/train', help='note for this run')
-parser.add_argument('--job_name', type=str, default='expriments_name', help='job_name')
+parser.add_argument('--num_timesteps', type=int, default=500)
+parser.add_argument('--size', type=int, default=128)
+parser.add_argument('--dataset_root', type=str, default='/home/david/datasets/ProstateSeg/NCI-ISBI/images/train')
+parser.add_argument('--job_name', type=str, default='experiments_name', help='note for this run')
 
 args, unparsed = parser.parse_known_args()
 
@@ -57,7 +57,7 @@ def main():
         logging.info("unparsed_args = %s", unparsed)
 
     from denoising_diffusion_pytorch import GaussianDiffusion, Trainer
-    from ResUnet_without import Unet
+    from ResUnet_wo_attention import Unet
 
     model = Unet(
         dim=64,

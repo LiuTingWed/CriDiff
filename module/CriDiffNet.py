@@ -686,6 +686,7 @@ class Unet(nn.Module):
     def __init__(
         self,
         dim,
+        cp_condition_net,
         dim_mults=(1, 2, 4, 8),
         self_condition = True,
         with_time_emb = True,
@@ -693,7 +694,7 @@ class Unet(nn.Module):
     ):
         super(Unet, self).__init__()
 
-        self.condition_extractor = ConditionExtractor(dim, dim_mults, False, False, residual)
+        self.condition_extractor = ConditionExtractor(dim, cp_condition_net, dim_mults, False, False, residual)
 
         # determizne dimensions
         input_img_channels = 1
