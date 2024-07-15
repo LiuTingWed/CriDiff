@@ -360,13 +360,13 @@ def pvt_v2_b1(pretrained=False, **kwargs):
 #     print("mit_b2.pth is successfully loaded!!!")
 
 @register_model
-def pvt_v2_b2(pretrained=False, **kwargs):
+def pvt_v2_b2(pretrained, cp_condition_net, **kwargs):
     model = PyramidVisionTransformerV2(
         patch_size=4, embed_dims=[64, 128, 320, 512], num_heads=[1, 2, 5, 8], mlp_ratios=[8, 8, 4, 4], qkv_bias=True,
         norm_layer=partial(nn.LayerNorm, eps=1e-6), depths=[3, 4, 6, 3], sr_ratios=[8, 4, 2, 1], **kwargs)
     model.default_cfg = _cfg()
     if pretrained == True:
-        pretrained_dict = torch.load('/home/oip/codes/LZW/pvt_v2_b2.pth')
+        pretrained_dict = torch.load(cp_condition_net)
         # model_dict = model.state_dict()
         key_ex = ["patch_embed1.proj.weight"]
         pretrained_dict2 = {k: v for k, v in pretrained_dict.items() if k not in key_ex}
