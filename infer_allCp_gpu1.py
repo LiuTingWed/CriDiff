@@ -125,7 +125,7 @@ def main():
     num_checkpoints = len(checkpoint_files)
 
     # 前一半的检查点
-    checkpoints_to_validate = checkpoint_files[20:]
+    checkpoints_to_validate = checkpoint_files[int(num_checkpoints/2):]
 
     # 循环验证分配给这个GPU的检查点
     from collections import OrderedDict

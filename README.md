@@ -33,7 +33,7 @@ This stage relies on [accelerate](https://github.com/huggingface/accelerate), pl
 python generative_pretrain/train_generator_accelerate.py --dataset_root xxx/DATASET_NAME/images/train
 `` 
 ### Training
-Before trainning, please check **--dataset_root, --cp_condition_net, --cp_stage1, --checkpoint_save_dir** in train.py
+Before training, please check **--dataset_root, --cp_condition_net, --cp_stage1, --checkpoint_save_dir** in train.py
 \
 ``
 python -m torch.distributed.launch --nproc_per_node=2 train.py
@@ -42,9 +42,11 @@ python -m torch.distributed.launch --nproc_per_node=2 train.py
 The output of diffusion models is related to the randomly sampled noise: different noise leads to different outputs. I have not addressed the issue of fluctuating model performance between the training and validation stages, for detailed descriptions please refer to [this link](https://github.com/lucidrains/med-seg-diff-pytorch/issues/18). 
 Therefore, I would recommend saving all checkpoints, and then using two separate GPUs for validation to ensure that others can also achieve consistent performance. Well, I hope someone smarter than me tell me why :-).
 ### Inference
-xxxxx
+After training, in path **--checkpoint_save_dir/job_name** will have many **.pth** file. 
+\
+Check **--loadDir**, **--loadDer_cp** and **--dataset_root** in infer_allCp_xxxx.py and run it.
 ### Evaluation
-xxxxxx
+The prediction of CriDiff is this [link](https://drive.google.com/file/d/1JTA3r7Flri8klzr-Rj3eE8ltXMLCZPFg/view?usp=sharing), run **eval_dice_iou_hd95_asd/eval.py** to eval it. 
 ## Thanks 
 This repository refer to [med-seg-diff-pytorch](https://github.com/lucidrains/med-seg-diff-pytorch) and [denoising-diffusion-pytorch](https://github.com/lucidrains/denoising-diffusion-pytorch). Some very concise diffusion frameworks are helpful to me.
 ## Citation
