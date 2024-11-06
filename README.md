@@ -51,11 +51,13 @@ The prediction of CriDiff is this [link](https://drive.google.com/file/d/1JTA3r7
 This repository refer to [med-seg-diff-pytorch](https://github.com/lucidrains/med-seg-diff-pytorch) and [denoising-diffusion-pytorch](https://github.com/lucidrains/denoising-diffusion-pytorch). Some very concise diffusion frameworks are helpful to me.
 ## Citation
 ```
-@article{liu2024cridiff,
+@inproceedings{liu2024cridiff,
   title={CriDiff: Criss-cross Injection Diffusion Framework via Generative Pre-train for Prostate Segmentation},
   author={Liu, Tingwei and Zhang, Miao and Liu, Leiye and Zhong, Jialong and Wang, Shuyao and Piao, Yongri and Lu, Huchuan},
-  journal={arXiv preprint arXiv:2406.14186},
-  year={2024}
+  booktitle={International Conference on Medical Image Computing and Computer-Assisted Intervention},
+  pages={102--112},
+  year={2024},
+  organization={Springer}
 }
 ```
 ## Any questions please contact with tingweiliu@mail.dlut.edu.cn
